@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Kotlin-demo</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_activity_demo_compose">DemoCompose</string>
+</resources>
