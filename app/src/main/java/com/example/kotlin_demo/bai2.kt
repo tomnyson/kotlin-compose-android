@@ -1,3 +1,5 @@
+package com.example.kotlin_demo
+
 fun main() {
     """
         1: Kiểm tra độ tuổi Viết một hàm nhận vào tuổi và in ra "Trẻ em" nếu tuổi nhỏ hơn 12, "Thiếu niên" nếu tuổi từ 12 đến 17, "Người lớn" nếu tuổi từ 18 trở lên.

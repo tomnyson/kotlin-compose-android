@@ -78,6 +78,10 @@ dependencies {
     // For UI preview in Android Studio
     debugImplementation("androidx.compose.ui:ui-tooling:1.3.1")
     debugImplementation(libs.androidx.ui.test.manifest)
+    // retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    // gson converter
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
 
 }
