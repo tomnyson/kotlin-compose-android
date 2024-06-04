@@ -84,6 +84,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+    // create route
+    implementation("androidx.navigation:navigation-compose:2.5.3")
+    // import image coi
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
 
 }

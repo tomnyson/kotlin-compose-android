@@ -35,8 +35,13 @@ import retrofit2.Response
 import LoginRequest
 import RegisterRequest
 import UserData
+import androidx.navigation.NavHostController
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import java.io.IOException
+
 @Composable
-fun RegisterForm() {
+fun RegisterForm(navController: NavHostController) {
     val context = LocalContext.current
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -53,8 +58,8 @@ fun RegisterForm() {
         Image(painter = painterResource(id = R.drawable.baseline_account_box_24), contentDescription = "Logo")
         Text(text = "Register", fontSize = 50.sp , fontWeight = FontWeight.Bold )
         TextField(value = userName, onValueChange = { userName = it }, label = { Text(text = "UserName") }, modifier = Modifier.padding(10.dp))
-        TextField(value = password, onValueChange = { password = it }, label = { Text(text = "Password") })
-        TextField(value = email, onValueChange = { email = it }, label = { Text(text = "Email") })
+        TextField(value = password, onValueChange = { password = it }, label = { Text(text = "Password") }, modifier = Modifier.padding(10.dp))
+        TextField(value = email, onValueChange = { email = it }, label = { Text(text = "Email") }, modifier = Modifier.padding(10.dp))
         Button(onClick = {
             Log.d("test", "$userName $password")
             try {
@@ -62,8 +67,33 @@ fun RegisterForm() {
                 Log.d("test", user.toString())
                 ApiClient.apiService.register(user).enqueue(object: Callback<UserData> {
                     override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
-                        Toast.makeText(context, response.body()?.data?.username, Toast.LENGTH_LONG).show()
-//                        result = if (response.isSuccessful) "Login successful" else "Login failed"
+                        if (response.isSuccessful) {
+                          result = "OK"
+                        } else {
+                            val errorBody = response.errorBody()?.string()
+                            if (errorBody != null) {
+                                try {
+                                    // Attempt to parse the error body as a JSON object
+                                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+                                    result = errorResponse.message
+                                } catch (e: JsonSyntaxException) {
+                                    // Handle JSON parsing error
+                                    e.printStackTrace()
+                                    result = "An error occurred while parsing the error response."
+                                } catch (e: IOException) {
+                                    // Handle IO error
+                                    e.printStackTrace()
+                                    result = "An error occurred while reading the error response."
+                                } catch (e: Exception) {
+                                    // Handle any other exceptions
+                                    e.printStackTrace()
+                                    result = "An unexpected error occurred."
+                                }
+                            } else {
+                                // Handle case where errorBody is null
+                                result = "An unknown error occurred."
+                            }
+                        }
                     }
 
                     override fun onFailure(call: Call<UserData>, t: Throwable) {
@@ -81,8 +111,9 @@ fun RegisterForm() {
             ,colors = ButtonDefaults.buttonColors(containerColor = Color.Gray))
         {
             Text(text = "Login")
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(result)
+
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(result)
     }
 }

@@ -1,24 +1,21 @@
-package com.example.kotlin_demo
+package com.example.kotlin_demo.screen
 
-import ApiService
 import LoginRequest
-import LoginViewModel
 import UserData
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,42 +32,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.kotlin_demo.ui.theme.KotlindemoTheme
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.math.log
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.kotlin_demo.screen.RegisterForm
+import com.example.kotlin_demo.ApiClient
+import com.example.kotlin_demo.R
 
-class LoginScreen : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            KotlindemoTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-//                    LoginForm()
-                    RegisterForm()
-                }
-
-            }
-        }
-    }
-}
+//class LoginScreen : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            KotlindemoTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                    color = MaterialTheme.colorScheme.background
+//                ) {
+//                    val navController = rememberNavController()
+////                    LoginForm()
+//                    RegisterForm(navController)
+//                }
+//
+//            }
+//        }
+//    }
+//}
 
 
 @Composable
-fun LoginForm() {
+fun LoginScreen(navController: NavHostController) {
     val context = LocalContext.current
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -114,9 +113,13 @@ fun LoginForm() {
             ,colors = ButtonDefaults.buttonColors(containerColor = Color.Gray))
         {
             Text(text = "Login")
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(result)
+
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        // Create a clickable text link
+//        TextAllowClick(navController)
+        Text(result)
     }
 }
 
@@ -134,7 +137,32 @@ fun Greeting3(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun LoginFormPreview3() {
+    val navController = rememberNavController()
     KotlindemoTheme {
-        LoginForm()
+        LoginScreen(navController)
     }
+}
+
+@Composable
+fun  TextAllowClick(navController: NavHostController, title: String, link: String) {
+    val annotatedString = buildAnnotatedString {
+        pushStringAnnotation(
+            tag = "URL",
+            annotation = "register"
+        )
+        withStyle(style = SpanStyle(color = Color.Blue)) {
+            append(title)
+        }
+        pop()
+    }
+
+    Text(
+        text = annotatedString,
+        modifier = Modifier.clickable {
+            annotatedString.getStringAnnotations(tag = "URL", start = 0, end = annotatedString.length)
+                .firstOrNull()?.let { annotation ->
+                    navController.navigate(annotation.item)
+                }
+        }
+    )
 }
