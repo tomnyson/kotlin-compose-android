@@ -3,6 +3,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import java.util.Date
 
 data class LoginRequest(val username: String, val password: String)
@@ -33,5 +34,8 @@ interface ApiService {
 
     @GET("/api/product")
     fun getProduct(): Call<List<Product>>
+
+    @GET("/api/product/{id}")
+    fun getProductDetail(@Path("id") id: String): Call<Product>
 
 }
