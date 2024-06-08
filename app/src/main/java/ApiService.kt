@@ -26,6 +26,25 @@ data class Product(
     val category: Category?
 )
 
+data class CartItem(
+    val productId: Product,
+    val quantity: Int,
+)
+
+data class CartItemRequest(
+    val productId: Product,
+    val quantity: Int,
+)
+data class CartResponse(
+    val userId: String,
+    val items: List<CartItem>
+)
+
+data class CartRequest(
+    val userId: String,
+    val items: List<CartItemRequest>
+)
+
 interface ApiService {
     @POST("/api/user/login")
     fun login(@Body user: LoginRequest): Call<UserData>
@@ -37,5 +56,11 @@ interface ApiService {
 
     @GET("/api/product/{id}")
     fun getProductDetail(@Path("id") id: String): Call<Product>
+
+    @POST("/api/cart")
+    fun saveCart(@Body request: CartRequest): Call<CartResponse>
+    @GET("/api/cart/{userId}")
+    fun getCart(@Path("id") id: String): Call<CartResponse>
+
 
 }

@@ -88,6 +88,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.5.3")
     // import image coi
     implementation("io.coil-kt:coil-compose:2.6.0")
+    // logging
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
 
 
 }

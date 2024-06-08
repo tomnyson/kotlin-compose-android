@@ -42,7 +42,10 @@ fun ProductScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(products.size) { index ->
-                    ProductItem(product = products[index], navController)
+                    Column {
+                        ProductItem(product = products[index], navController)
+                    }
+
                 }
             }
         }
@@ -72,7 +75,7 @@ fun ProductItem(product: Product, navController: NavHostController) {
                 contentScale = ContentScale.Crop
             )
         }
-        Box(
+        Column(
             modifier = Modifier.padding(top = 4.dp)
         ) {
             Text(
