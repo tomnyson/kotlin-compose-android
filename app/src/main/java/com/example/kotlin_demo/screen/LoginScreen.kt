@@ -47,6 +47,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import com.example.kotlin_demo.ApiClient
 import com.example.kotlin_demo.R
+import com.example.kotlin_demo.utils.UserManager
 
 //class LoginScreen : ComponentActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +76,7 @@ fun LoginScreen(navController: NavHostController) {
     var userName by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var result by remember { mutableStateOf("") }
+    val userContext = UserManager(context)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -95,6 +97,15 @@ fun LoginScreen(navController: NavHostController) {
                 ApiClient.apiService.login(user).enqueue(object: Callback<UserData> {
                     override fun onResponse(call: Call<UserData>, response: Response<UserData>) {
                         Toast.makeText(context, response.body()?.data?.username, Toast.LENGTH_LONG).show()
+                        val _id =  response.body()?.data?._id
+                        val username =  response.body()?.data?.username
+                        val token =  response.body()?.token
+                        if(_id != null && username != null && token !=null) {
+                            userContext.saveUser(_id, username, token)
+                        }
+
+
+                        navController.navigate("product")
 //                        result = if (response.isSuccessful) "Login successful" else "Login failed"
                     }
 

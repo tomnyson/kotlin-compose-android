@@ -14,10 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.kotlin_demo.ViewModel.ProductDetailViewModel
-import com.example.kotlin_demo.ViewModel.ProductViewModel
 import androidx.compose.ui.Alignment
+import androidx.navigation.NavHostController
+import com.example.kotlin_demo.ViewModel.CartViewModel
+import com.example.kotlin_demo.ViewModel.ProductCart
+
 @Composable
-fun ProductDetailScreen(productId: String) {
+fun ProductDetailScreen(navController: NavHostController, productId: String,
+                        viewCartModel: CartViewModel
+                        ) {
     val viewModel: ProductDetailViewModel = viewModel()
     val product by viewModel.product
     val isLoading by viewModel.isLoading
@@ -52,8 +57,19 @@ fun ProductDetailScreen(productId: String) {
             Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = {
 //                    cartViewModel.addToCart(product)
+                    val product = product?.let { ProductCart(it._id, product!!.name, product!!.price) }
+                    if (product != null) {
+                        Log.d("test", "go here")
+                        viewCartModel.addToCart(product)
+                    }
 
                 }) {
                 Text("Add to Cart")
+            }
+
+            Button(onClick = {
+                navController.navigate("cart")
+            }) {
+                Text("Go to Cart")
             }
 }}}

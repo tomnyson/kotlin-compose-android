@@ -34,6 +34,13 @@ fun ProductScreen(navController: NavHostController) {
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else {
+            Button(
+                onClick = {
+                    navController.navigate("cart")
+                },
+            ) {
+                Icon(Icons.Filled.ShoppingCart, contentDescription = null)
+            }
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(minSize = 128.dp),
                 modifier = Modifier.fillMaxSize(),
